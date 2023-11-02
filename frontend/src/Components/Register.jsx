@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Header from './Header';
 import axios from 'axios';
+import OTPComponent from './OTPComponent';
 
 const Register = () => {
     const base_url = import.meta.env.VITE_BACKEND_URL;
@@ -10,12 +11,19 @@ const Register = () => {
     const [role, setRole] = useState('');
     const [password, setPassword] = useState('');
     const [acknowledgment, setAcknowledgment] = useState('');
+    const [showOTPForm, setShowOTPForm] = useState(false);
+    const [otpcode, setOtpCode] = useState(0);
+    const [userInfo, setUserInfo] = useState([]);
+
     // method for handling registration event
     const handleRegister = async (e) => {
         e.preventDefault();
         const dataToBeSend = { username, mobileNo, role, password };
         const response = await axios.post(`${base_url}/api/register`, dataToBeSend, { withCredentials: true });
-        console.log(response.data);
+        setUserInfo({ username, mobileNo, role, password });
+        setAcknowledgment(response.data.message);
+        setOtpCode(response.data.code);
+        setShowOTPForm(true);
     }
 
     return (
@@ -39,6 +47,9 @@ const Register = () => {
                 <div className="text-center my-3">
                     <h5>{acknowledgment}</h5>
                 </div>
+                {
+                    showOTPForm ? <OTPComponent code={otpcode} userInfo={userInfo} /> : <></>
+                }
                 <div className="col-12 text-center mt-4">
                     <h5>Already a user?</h5>
                     <h6><a href="/">Click here to login</a></h6>
