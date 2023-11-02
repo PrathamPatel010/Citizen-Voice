@@ -14,6 +14,9 @@ body {
     color: #fff !important;
 }
 
+
+/* Styles for Register.jsx */
+
 .registration-page {
     height: 100vh;
     background-image: url('./assets/banner-bg.png');
@@ -37,4 +40,26 @@ body {
     margin-top: 1rem;
     width: 50%;
     height: 2rem;
+}
+
+
+/* Styles for Login.jsx */
+
+.form-login {
+    display: flex;
+    flex-direction: column;
+    column-gap: 1rem;
+    align-items: center;
+}
+
+.form-login input {
+    width: 50%;
+    height: 2rem;
+    margin-top: 1rem;
+}
+
+.login-page {
+    height: 100vh;
+    background-image: url('./assets/banner-bg.png');
+    background-repeat: no-repeat;
 }

@@ -29,15 +29,15 @@ const Register = () => {
     return (
         <section className="registration-page">
             <Header />
-            <section className="reg-form-sec">
+            <section>
                 <div className="d-flex justify-content-center">
-                    <h2>Registration Form</h2>
+                    <h2>Registration</h2>
                 </div>
                 <form onSubmit={handleRegister} className="reg-form" method="post">
                     <input value={username} onChange={(e) => { setUsername(e.target.value) }} type="text" placeholder="Username" />
                     <input value={mobileNo} onChange={(e) => { setMobileNo(e.target.value) }} type="number" placeholder="Mobile No" />
                     <select value={role} onChange={(e) => { setRole(e.target.value) }}>
-                        <option value="">You are registering as</option>
+                        <option value="">You are a</option>
                         <option value='Citizen' onChange={(e) => { setRole(e.target.value) }}>Citizen</option>
                         <option value='Police Officer' onChange={(e) => { setRole(e.target.value) }}>Police Officer</option>
                     </select>

@@ -6,6 +6,9 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const { connectDb } = require('./database/db');
 const { User } = require('./database/User');
+const accountSid = 'AC6eb88ecb0c4fb4520de78ed6a3ba2a35';
+const authToken = 'bc62a120a0d8a4d06196a1364a4d99e3';
+const client = require('twilio')(accountSid, authToken);
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -31,12 +34,23 @@ app.get('/', (req, res) => {
     res.send(`<h1>CitizenVoice Backend is up & running</h1>`);
 })
 
-app.post('/api/register', (req, res) => {
-    const { mobileNo } = req.body;
-    console.log(mobileNo);
-    const otp = Math.floor(100000 + Math.random() * 900000);
-    console.log('Generated OTP:', otp);
-    res.json({ status: 200, message: 'OTP sent to your mobile number', code: otp });
+app.post('/api/register', async(req, res) => {
+    try {
+        let { mobileNo } = req.body;
+        const otp = Math.floor(100000 + Math.random() * 900000);
+        console.log(`Mobile No: ${mobileNo}`);
+        console.log('Generated OTP:', otp);
+
+        // otp sending logic
+        const message = await client.messages.create({
+            body: `OTP is ${otp} for CitizenVoice account verification`,
+            from: process.env.twillio_no,
+            to: `+91${mobileNo}`
+        });
+        res.json({ status: 200, message: 'OTP sent to your mobile number', code: otp });
+    } catch (err) {
+        console.log(err.message);
+    }
 });
 
 app.post('/api/createUser', async(req, res) => {
