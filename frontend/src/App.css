@@ -13,3 +13,28 @@ body {
     background-color: #121212 !important;
     color: #fff !important;
 }
+
+.registration-page {
+    height: 100vh;
+    background-image: url('./assets/banner-bg.png');
+    background-repeat: no-repeat;
+}
+
+.reg-form {
+    display: flex;
+    flex-direction: column;
+    column-gap: 1rem;
+    align-items: center;
+}
+
+.reg-form input {
+    width: 50%;
+    height: 2rem;
+    margin-top: 1rem;
+}
+
+.reg-form select {
+    margin-top: 1rem;
+    width: 50%;
+    height: 2rem;
+}
