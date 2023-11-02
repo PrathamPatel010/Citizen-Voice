@@ -18,6 +18,15 @@ const Register = () => {
     // method for handling registration event
     const handleRegister = async (e) => {
         e.preventDefault();
+        if (mobileNo.length !== 10) {
+            setAcknowledgment('Enter correct mobile number!!');
+            return;
+        }
+        if (role == '') {
+            setAcknowledgment('Select role to proceed further!!');
+            return;
+        }
+        setAcknowledgment('');
         const dataToBeSend = { username, mobileNo, role, password };
         const response = await axios.post(`${base_url}/api/register`, dataToBeSend, { withCredentials: true });
         setUserInfo({ username, mobileNo, role, password });
@@ -29,19 +38,19 @@ const Register = () => {
     return (
         <section className="registration-page">
             <Header />
-            <section className="reg-form-sec">
-                <div className="d-flex justify-content-center">
-                    <h2>Registration Form</h2>
+            <section>
+                <div className="d-flex justify-content-center mt-3">
+                    <h2>Registration</h2>
                 </div>
                 <form onSubmit={handleRegister} className="reg-form" method="post">
-                    <input value={username} onChange={(e) => { setUsername(e.target.value) }} type="text" placeholder="Username" />
-                    <input value={mobileNo} onChange={(e) => { setMobileNo(e.target.value) }} type="number" placeholder="Mobile No" />
-                    <select value={role} onChange={(e) => { setRole(e.target.value) }}>
-                        <option value="">You are registering as</option>
+                    <input className="form-control" value={username} onChange={(e) => { setUsername(e.target.value) }} type="text" placeholder="Username" required />
+                    <input className="form-control" value={mobileNo} onChange={(e) => { setMobileNo(e.target.value) }} type="number" placeholder="Mobile No" required />
+                    <select className="form-control" value={role} onChange={(e) => { setRole(e.target.value) }} >
+                        <option value="">You are a</option>
                         <option value='Citizen' onChange={(e) => { setRole(e.target.value) }}>Citizen</option>
                         <option value='Police Officer' onChange={(e) => { setRole(e.target.value) }}>Police Officer</option>
                     </select>
-                    <input value={password} onChange={(e) => { setPassword(e.target.value) }} type="text" placeholder="Password" />
+                    <input className="form-control" value={password} onChange={(e) => { setPassword(e.target.value) }} type="password" placeholder="Password" required />
                     <button type="submit" className="btn btn-success mt-3">Register</button>
                 </form>
                 <div className="text-center my-3">
@@ -55,7 +64,7 @@ const Register = () => {
                     <h6><a href="/">Click here to login</a></h6>
                 </div>
             </section>
-        </section>
+        </section >
     );
 }
 
