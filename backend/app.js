@@ -7,8 +7,8 @@ const bcrypt = require('bcrypt');
 const axios = require('axios');
 const { connectDb } = require('./database/db');
 const { User } = require('./database/User');
-const accountSid = 'AC6eb88ecb0c4fb4520de78ed6a3ba2a35';
-const authToken = 'bc62a120a0d8a4d06196a1364a4d99e3';
+const accountSid = '--can be added--';
+const authToken = '--can be added--';
 const client = require('twilio')(accountSid, authToken);
 const API_KEY = process.env.API_KEY;
 
