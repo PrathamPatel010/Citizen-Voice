@@ -13,7 +13,7 @@ const OTPComponent = ({ code, userInfo }) => {
             setAck('Success!!');
             const response = await axios.post(`${base_url}/api/createUser`, userInfo, { withCredentials: true });
             console.log(response.data);
-            window.location.href = "/login";
+            window.location.href = "/";
         } else {
             setAck('Wrong OTP!!');
         }

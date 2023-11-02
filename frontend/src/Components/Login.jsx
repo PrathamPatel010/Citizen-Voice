@@ -13,8 +13,8 @@ const Login = () => {
     // method for handling login event
     const handleLogin = async (e) => {
         e.preventDefault();
-        const dataToBeSend = { username, password };
-        const response = await axios.post(`${base_url}/api/login`, dataToBeSend, { withCredentials: true });
+        const response = await axios.post(`${base_url}/api/login`, { username, password }, { withCredentials: true });
+        console.log(response.data);
         setUserInfo({ username, password });
         setAcknowledgment(response.data.message);
     }
@@ -23,12 +23,12 @@ const Login = () => {
         <section className="login-page">
             <Header />
             <section>
-                <div className="d-flex justify-content-center">
+                <div className="d-flex justify-content-center mt-3">
                     <h2>Login</h2>
                 </div>
                 <form onSubmit={handleLogin} className="form-login" method="post">
-                    <input value={username} onChange={(e) => { setUsername(e.target.value) }} type="text" placeholder="Username" />
-                    <input value={password} onChange={(e) => { setPassword(e.target.value) }} type="text" placeholder="Password" />
+                    <input className="form-control" value={username} onChange={(e) => { setUsername(e.target.value) }} type="text" placeholder="Username" required />
+                    <input className="form-control" value={password} onChange={(e) => { setPassword(e.target.value) }} type="password" placeholder="Password" required />
                     <button type="submit" className="btn btn-success mt-3">Login</button>
                 </form>
                 <div className="text-center my-3">
