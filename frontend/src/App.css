@@ -65,7 +65,7 @@ body {
 }
 
 
-/* Styles for dashboard.jsx */
+/* Styles for FeedbackForm.jsx */
 
 .dashboard-sec {
     background-image: url('./assets/banner-bg.png');
@@ -102,4 +102,28 @@ body {
     background-image: url('./assets/banner-bg.png');
     background-repeat: no-repeat;
     height: 100vh;
+}
+
+
+/* Styles for Feedbacks.jsx */
+
+.feedbacks-sec {
+    background-image: url('./assets/banner-bg.png');
+    background-repeat: no-repeat;
+    height: 100vh;
+}
+
+
+/* FeedbackCard.css */
+
+.table {
+    margin-bottom: 0;
+    background-color: #343a40;
+    color: #fff !important;
+}
+
+.card-body {
+    padding: 0;
+    height: max-content;
+    width: 100%;
 }
