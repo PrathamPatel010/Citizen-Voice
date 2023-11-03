@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import FeedbackCard from './FeedbackCard';
@@ -56,11 +57,13 @@ const Feedbacks = () => {
                 <span className="text-center">
                     <h4>Feedbacks</h4>
                 </span>
-                <ul>
-                    {feedbacks.map((feedback) => (
-                        <FeedbackCard key={feedback._id} feedback={feedback} />
-                    ))}
-                </ul>
+                {
+                    feedbacks.reverse().map((feedback) => {
+                        return (
+                            <FeedbackCard key={feedback._id} feedback={feedback} />
+                        )
+                    })
+                }
             </div>
         </section>
     )

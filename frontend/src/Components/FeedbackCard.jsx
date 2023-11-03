@@ -20,7 +20,7 @@ const FeedbackCard = ({ feedback }) => {
                     </tbody>
                 </table>
             </div>
-        </div >
+        </div>
     );
 }
 

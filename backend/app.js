@@ -117,7 +117,7 @@ app.post('/api/login', async(req, res) => {
         }
 
         // case: password matches username
-        jwt.sign({ id: user._id, username: user.username }, secret, (err, token) => {
+        jwt.sign({ id: user._id, username: user.username, role: user.role }, secret, (err, token) => {
             if (err) {
                 console.log(err.message);
                 return;
@@ -140,7 +140,8 @@ app.get('/api/checkAuth', async(req, res) => {
 
         const payload = jwt.verify(req.cookies.token, secret);
         const username = payload.username;
-        res.json({ status: 200, message: 'User verified', username });
+        const role = payload.role;
+        res.json({ status: 200, message: 'User verified', username, role });
     } catch (err) {
         console.log(err.message);
         res.json({ message: err.message });
