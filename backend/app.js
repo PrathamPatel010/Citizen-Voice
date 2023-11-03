@@ -5,17 +5,21 @@ const frontend_url = process.env.frontend_url;
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const axios = require('axios');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 const { connectDb } = require('./database/db');
 const { User } = require('./database/User');
-const accountSid = '--can be added--';
-const authToken = '--can be added--';
-const client = require('twilio')(accountSid, authToken);
+// const accountSid = '--can be added--';
+// const authToken = '--can be added--';
+// const client = require('twilio')(accountSid, authToken);
 const API_KEY = process.env.API_KEY;
+const secret = process.env.jwtSecret;
 
 // middlewares
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 const corsOption = {
     origin: frontend_url,
     credentials: true,
@@ -42,6 +46,14 @@ app.get('/', (req, res) => {
 
 app.post('/api/register', async(req, res) => {
     try {
+        const { username } = req.body;
+        // check if user already exist
+        const UserExist = await User.findOne({ username });
+        if (UserExist) {
+            return res.json({ status: 400, message: 'User Already Exist, You just need to login' });
+        }
+
+        // if not, then register the user
         let { mobileNo } = req.body;
         const otp = Math.floor(100000 + Math.random() * 900000);
         console.log(`Mobile No: ${mobileNo}`);
@@ -72,17 +84,44 @@ app.post('/api/register', async(req, res) => {
 });
 
 app.post('/api/createUser', async(req, res) => {
-    const { username, mobileNo, role, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ username, mobileNo, role, password: hashedPassword });
-    res.json({ status: 200, message: 'Account created successfully!!' });
+    try {
+        const { username, mobileNo, role, password } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user = await User.create({ username, mobileNo, role, password: hashedPassword });
+        res.json({ status: 200, message: 'Account created successfully!!' });
+    } catch (err) {
+        console.log(err.message);
+    }
 });
 
 app.post('/api/login', async(req, res) => {
-    const { username, password } = req.body;
-    const findUser = await User.findOne({ username });
-    const passOk = await bcrypt.compare(password, findUser.password);
-    if (passOk) {
-        res.json({ message: 'Success!!' });
+    try {
+        const { username, password } = req.body;
+
+        // if no user exist, this query will return result with rowCount=0
+        const user = await User.findOne({ username });
+        if (!user) {
+            return res.json({ status: 404, message: 'No User Found, You need to register' });
+        }
+
+        // if user exist, it will return User Object.
+        const hashedPassword = user.password;
+        const passCheck = await bcrypt.compare(password, hashedPassword);
+
+        // case: password does not match username
+        if (!passCheck) {
+            return res.json({ status: 501, message: 'Wrong Username OR password!!' });
+        }
+
+        // case: password matches username
+        jwt.sign({ id: user._id, username: user.username }, secret, (err, token) => {
+            if (err) {
+                console.log(err.message);
+                return;
+            }
+            res.cookie('token', token, { httpOnly: false, secure: true, sameSite: 'none' }).json({ status: 200, message: 'Success!!' });
+        });
+    } catch (err) {
+        console.log(err.message);
     }
-})
+});

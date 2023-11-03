@@ -8,14 +8,12 @@ const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [acknowledgment, setAcknowledgment] = useState('');
-    const [userInfo, setUserInfo] = useState([]);
 
     // method for handling login event
     const handleLogin = async (e) => {
         e.preventDefault();
         const response = await axios.post(`${base_url}/api/login`, { username, password }, { withCredentials: true });
         console.log(response.data);
-        setUserInfo({ username, password });
         setAcknowledgment(response.data.message);
     }
 

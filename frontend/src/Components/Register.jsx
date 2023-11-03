@@ -29,6 +29,10 @@ const Register = () => {
         setAcknowledgment('');
         const dataToBeSend = { username, mobileNo, role, password };
         const response = await axios.post(`${base_url}/api/register`, dataToBeSend, { withCredentials: true });
+        if (response.data.status !== 200) {
+            setAcknowledgment(response.data.message);
+            return;
+        }
         setUserInfo({ username, mobileNo, role, password });
         setAcknowledgment(response.data.message);
         setOtpCode(response.data.code);
