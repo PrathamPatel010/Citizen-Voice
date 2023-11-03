@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const { connectDb } = require('./database/db');
 const { User } = require('./database/User');
+const { Feedback } = require('./database/Feedback');
 // const accountSid = '--can be added--';
 // const authToken = '--can be added--';
 // const client = require('twilio')(accountSid, authToken);
@@ -42,7 +43,7 @@ startApp();
 // Home Route
 app.get('/', (req, res) => {
     res.send(`<h1>CitizenVoice Backend is up & running</h1>`);
-})
+});
 
 app.post('/api/register', async(req, res) => {
     try {
@@ -123,5 +124,34 @@ app.post('/api/login', async(req, res) => {
         });
     } catch (err) {
         console.log(err.message);
+    }
+});
+
+// route for checking auth
+app.get('/api/checkAuth', async(req, res) => {
+    try {
+        const isAuth = req.cookies.token ? true : false;
+        if (!isAuth) {
+            return res.json({ status: 404, message: 'No token found!' });
+        }
+
+        const payload = jwt.verify(req.cookies.token, secret);
+        const username = payload.username;
+        res.json({ status: 200, message: 'User verified', username });
+    } catch (err) {
+        console.log(err.message);
+        res.json({ message: err.message });
+    }
+});
+
+app.post('/api/addReview', async(req, res) => {
+    try {
+        const { district, address, review } = req.body;
+        const feedback = await Feedback.create({ district, address, description: review });
+        console.log(feedback);
+        res.json({ status: 200, message: 'Feedback Sent Successfully!!' });
+    } catch (err) {
+        console.log(err.message);
+        res.json({ message: err.message });
     }
 });

@@ -13,8 +13,12 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         const response = await axios.post(`${base_url}/api/login`, { username, password }, { withCredentials: true });
-        console.log(response.data);
+        if (response.data.status != 200) {
+            setAcknowledgment(response.data.message);
+            return;
+        }
         setAcknowledgment(response.data.message);
+        window.location.href = "/dashboard";
     }
 
     return (
