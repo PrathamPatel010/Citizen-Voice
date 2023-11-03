@@ -81,6 +81,7 @@ app.post('/api/register', async(req, res) => {
         res.json({ status: 200, message: 'OTP sent to your mobile number', code: otp });
     } catch (err) {
         console.log(err.message);
+        res.json({ message: err.message });
     }
 });
 
@@ -92,6 +93,7 @@ app.post('/api/createUser', async(req, res) => {
         res.json({ status: 200, message: 'Account created successfully!!' });
     } catch (err) {
         console.log(err.message);
+        res.json({ message: err.message });
     }
 });
 
@@ -115,7 +117,7 @@ app.post('/api/login', async(req, res) => {
         }
 
         // case: password matches username
-        jwt.sign({ id: user._id, username: user.username }, secret, (err, token) => {
+        jwt.sign({ id: user._id, username: user.username, role: user.role }, secret, (err, token) => {
             if (err) {
                 console.log(err.message);
                 return;
@@ -124,6 +126,7 @@ app.post('/api/login', async(req, res) => {
         });
     } catch (err) {
         console.log(err.message);
+        res.json({ message: err.message });
     }
 });
 
@@ -137,7 +140,8 @@ app.get('/api/checkAuth', async(req, res) => {
 
         const payload = jwt.verify(req.cookies.token, secret);
         const username = payload.username;
-        res.json({ status: 200, message: 'User verified', username });
+        const role = payload.role;
+        res.json({ status: 200, message: 'User verified', username, role });
     } catch (err) {
         console.log(err.message);
         res.json({ message: err.message });
@@ -155,3 +159,26 @@ app.post('/api/addReview', async(req, res) => {
         res.json({ message: err.message });
     }
 });
+
+app.get('/api/logout', async(req, res) => {
+    try {
+        const isAuth = req.cookies.token ? true : false;
+        if (!isAuth) {
+            return res.json({ status: 404, message: 'No Cookies found' });
+        }
+        res.clearCookie('token', { httpOnly: false, secure: true, sameSite: 'none' }).json({ status: 200, message: 'Logout successfull!!' });
+    } catch (err) {
+        console.log(err.message);
+        res.json({ message: err.message });
+    }
+});
+
+app.get('/api/feedbacks', async(req, res) => {
+    try {
+        const feedbacks = await Feedback.find({ __v: 0 }).select('_id district address description');
+        res.json({ feedbacks, status: 200 });
+    } catch (err) {
+        console.log(err.message);
+        res.json(err.message);
+    }
+})
