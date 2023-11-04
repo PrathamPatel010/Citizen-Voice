@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import axios from 'axios';
-import QRContainerClass from "./QRContainer";
 
 const FeedbackForm = ({ result }) => {
     const base_url = import.meta.env.VITE_BACKEND_URL;
@@ -65,7 +64,7 @@ const FeedbackForm = ({ result }) => {
                 </span>
                 <form onSubmit={handleSubmit} method="post" className="feedback-form">
                     <select value={district} onChange={(e) => { setDistrict(e.target.value) }}>
-                        <option value=""></option>
+                        <option value="">Select District</option>
                         <option value="Anand">Anand</option>
                         <option value="Baroda">Baroda</option>
                         <option value="Ahmedabad">Ahmedabad</option>
