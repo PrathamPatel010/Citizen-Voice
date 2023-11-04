@@ -1,7 +1,7 @@
 import Feedbacks from "./Feedbacks";
 import { useEffect, useState } from "react";
 import axios from 'axios';
-import FeedbackForm from "./FeedbackForm";
+import QRContainerClass from "./QRContainer";
 const Dashboard = () => {
     const base_url = import.meta.env.VITE_BACKEND_URL;
     const [role, SetRole] = useState('');
@@ -23,7 +23,7 @@ const Dashboard = () => {
     return (
         <>
             {
-                (role === 'Citizen') ? <FeedbackForm /> : <Feedbacks />
+                (role === 'Citizen') ? <QRContainerClass /> : <Feedbacks />
             }
         </>
     )
