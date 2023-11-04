@@ -1,6 +1,8 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import axios from 'axios';
-const FeedbackForm = () => {
+
+const FeedbackForm = ({ result }) => {
     const base_url = import.meta.env.VITE_BACKEND_URL;
     const [username, SetUsername] = useState('');
     const [district, setDistrict] = useState('');
@@ -30,7 +32,6 @@ const FeedbackForm = () => {
         checkAuth();
     }
 
-
     // method for handling form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -43,6 +44,13 @@ const FeedbackForm = () => {
         setAck('Success!!');
         window.location.href = "/success";
     }
+
+    useEffect(() => {
+        if (result) {
+            // When 'result' changes, update the 'address' state
+            setAddress(result.text || ''); // Assuming 'text' property holds the address
+        }
+    }, [result]);
 
     return (
         <section className="dashboard-sec pt-4">
@@ -63,13 +71,27 @@ const FeedbackForm = () => {
                         <option value="Surat">Surat</option>
                         <option value="Nadiad">Nadiad</option>
                     </select>
-                    <input value={address} onChange={(e) => { setAddress(e.target.value) }} type="text" placeholder="Full address of police station" />
-                    <textarea value={review} onChange={(e) => { setReview(e.target.value) }} placeholder="Write your review"></textarea>
+                    <input
+                        value={address}
+                        onChange={(e) => {
+                            if (!result) {  // Check if 'result' is not set
+                                setAddress(e.target.value);  // Allow input only if 'result' is not set
+                            }
+                        }}
+                        type="text"
+                        placeholder="Full address of police station"
+                        disabled={!!result} // Disable the input field if 'result' is set
+                    />
+                    <textarea
+                        value={review}
+                        onChange={(e) => { setReview(e.target.value) }}
+                        placeholder="Write your review"
+                    ></textarea>
                     <button type="submit" className="btn btn-success">Submit</button>
                     <h5>{ack}</h5>
                 </form>
             </article>
-        </section >
+        </section>
     )
 }
 
